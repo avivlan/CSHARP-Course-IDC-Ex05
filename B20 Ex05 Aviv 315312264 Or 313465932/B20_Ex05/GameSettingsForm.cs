@@ -13,11 +13,13 @@ namespace B20_Ex05
 {
     public partial class GameSettingsForm : Form
     {
+        private bool m_IsDoneSettings;
         private static readonly string[] sr_BoardSizes = {"4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4",
                                                           "6 x 5", "6 x 6"};
         private static int s_SizeIndex = 0;
         public GameSettingsForm()
         {
+            m_IsDoneSettings = false;
             InitializeComponent();
         }
 
@@ -55,6 +57,7 @@ namespace B20_Ex05
         private void startButton_Click(object sender, EventArgs e)
         {
             this.Hide();
+            m_IsDoneSettings = true;
             bool isComputer = !secondPlayerText.Enabled;
             GameBoardForm gameBoardFrom = new GameBoardForm(FirstPlayerName, SecondPlayerName, BoardRows, BoardCols, isComputer);
             gameBoardFrom.ShowDialog();
@@ -62,7 +65,10 @@ namespace B20_Ex05
 
         private void GameSettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            startButton_Click(sender, e);
+            if (!m_IsDoneSettings)
+            {
+                startButton_Click(sender, e);
+            }
         }
 
         public string FirstPlayerName

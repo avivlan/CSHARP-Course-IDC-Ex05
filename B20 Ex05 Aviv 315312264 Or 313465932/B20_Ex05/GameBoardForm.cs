@@ -246,6 +246,7 @@ namespace B20_Ex05
 
         private void GameBoardForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.Close();
             Application.Exit();
         }
     }
