@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace B20_Ex02
 {
-  internal class Board
+  public class Board
     {
         private BoardSquare[,] m_BoardMatrix;
         private int m_Rows;

@@ -54,6 +54,7 @@ namespace B20_Ex05
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            this.Hide();
             bool isComputer = !secondPlayerText.Enabled;
             GameBoardForm gameBoardFrom = new GameBoardForm(FirstPlayerName, SecondPlayerName, BoardRows, BoardCols, isComputer);
             gameBoardFrom.ShowDialog();
@@ -84,7 +85,7 @@ namespace B20_Ex05
         {
             get
             {
-                return sr_BoardSizes[s_SizeIndex][0];
+                return sr_BoardSizes[s_SizeIndex][0] - '0';
             }
         }
 
@@ -92,7 +93,7 @@ namespace B20_Ex05
         {
             get
             {
-                return sr_BoardSizes[s_SizeIndex][4];
+                return sr_BoardSizes[s_SizeIndex][4] - '0';
             }
         }
 

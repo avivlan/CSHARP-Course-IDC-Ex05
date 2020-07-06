@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace B20_Ex02
 {
-   internal class BoardSquare
+   public class BoardSquare
     {
         private char m_Letter;
         private bool m_IsFlipped;
@@ -66,6 +66,11 @@ namespace B20_Ex02
         public bool Equals(BoardSquare i_Other)
         {
             return this.letter == i_Other.letter && this.RowIndex == i_Other.RowIndex && this.ColumnIndex == i_Other.ColumnIndex;
+        }
+
+        public string GetSquareID()
+        {
+            return string.Empty + RowIndex + ColumnIndex;
         }
     }
 }

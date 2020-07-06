@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace B20_Ex02
 {
-    internal class Player
+    public class Player
     {
         private string m_PlayerName;
         private bool m_IsComputer;
         private int m_Score;
+        private int m_PlayerNum;
 
-        public Player(string i_Name, bool i_IsComputer)
+        public Player(string i_Name, bool i_IsComputer, int i_PlayerNum)
         {
             this.m_PlayerName = i_Name;
             this.m_IsComputer = i_IsComputer;
+            this.m_PlayerNum = i_PlayerNum;
             this.m_Score = 0;
         }
 
@@ -55,6 +58,14 @@ namespace B20_Ex02
             set
             {
                 this.m_PlayerName = value;
+            }
+        }
+
+        public int PlayerNum
+        {
+            get
+            {
+                return m_PlayerNum;
             }
         }
     }

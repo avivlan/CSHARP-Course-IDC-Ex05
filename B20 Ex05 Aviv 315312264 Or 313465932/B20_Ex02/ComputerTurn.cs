@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace B20_Ex02
 {
-    internal class ComputerTurn
+    public class ComputerTurn
     {
        private static Random s_RandomMove = new Random();
        private static List<BoardSquare> s_GameMemory;

@@ -15,23 +15,28 @@ namespace B20_Ex02
         private int m_BoardRows;
         private int m_BoardCols;
         private int m_PlayerNum;
+        private Player m_CurrentPlayer;
+        BoardSquare m_CurrentMove;
+        BoardSquare m_PreviousMove;
+        private List<BoardSquare> m_ValidMoves;
+        private bool m_IsGameOver;
 
         public GameManager(string i_FirstPlayerName, string i_SecondPlayerName, int o_Rows, int o_Cols, bool isComputer)
         {
             m_PlayerNum = 1;
-            this.m_PlayerOne = new Player(i_FirstPlayerName, false);
+            this.m_PlayerOne = new Player(i_FirstPlayerName, false, 1);
             switch (isComputer)
             {
                 case true:
                     {
-                        m_PlayerTwo = new Player("Computer", isComputer);
+                        m_PlayerTwo = new Player("Computer", isComputer, 2);
                         break;
                     }
 
                 case false:
                     {
                         m_PlayerNum = 2;
-                        m_PlayerTwo = new Player(i_SecondPlayerName, isComputer);
+                        m_PlayerTwo = new Player(i_SecondPlayerName, isComputer, 2);
                         break;
                     } 
             }
@@ -41,46 +46,22 @@ namespace B20_Ex02
 
         private void startGame(int i_Rows, int i_Cols)
         {
-            //InputManager.GetBoardSize(ref m_BoardRows, ref m_BoardCols);
+            m_BoardRows = i_Rows;
+            m_BoardCols = i_Cols;
             m_Board = new Board(i_Rows, i_Cols);
+            m_ValidMoves = new ValidMovesGenerator(m_Board).validMoves;
             ComputerTurn.BuildMemory(m_Board);
-            Player currentPlayer = m_PlayerOne;
-            bool isGameOver = false;
+            m_CurrentPlayer = m_PlayerOne;
+            m_IsGameOver = false;
             bool isPlayerOneTurn = true;
             bool isAnotherGame;
-            //m_Board.PrintBoard();
+        }
 
-            while (!isGameOver)
-            {
-                if (isPlayerOneTurn)
-                {
-                    currentPlayer = m_PlayerOne;
-                    isPlayerOneTurn = false;
-                    isGameOver = playerTurn(currentPlayer);
-                }
-                else
-                {
-                    currentPlayer = m_PlayerTwo;
-                    isPlayerOneTurn = true;
-                    isGameOver = playerTurn(currentPlayer);
-                }
-            }
-
-            scoreScreen();
-            isAnotherGame = InputManager.GetUserEndgame();
-            if (isAnotherGame)
-            {
-                // reset player scores
-                m_PlayerOne.ResetScore();
-                m_PlayerTwo.ResetScore();
-                startGame(i_Rows, i_Cols);
-            }
-            else
-            {
-                Console.WriteLine("Thank you for playing! Goodbye");
-                System.Threading.Thread.Sleep(1500);
-                Environment.Exit(0);
-            }
+        public void RestartGame()
+        {
+            m_PlayerOne.ResetScore();
+            m_PlayerTwo.ResetScore();
+            startGame(m_BoardRows, m_BoardCols);
         }
 
         private void scoreScreen()
@@ -100,62 +81,6 @@ namespace B20_Ex02
                 Console.WriteLine(m_PlayerTwo.Name + " Wins!");
             }
         }
-        private bool playerTurn(Player i_currentPlayer)
-        {
-            BoardSquare currentMove;
-            BoardSquare previousMove;
-            bool isGameOver = false;
-            List<BoardSquare> validMoves = new ValidMovesGenerator(m_Board).validMoves;
-            if (validMoves.Count == 0)
-            {
-                isGameOver = true;
-            }
-
-            // computer turn
-            if (i_currentPlayer.IsComputer && !isGameOver)
-            {
-                List<BoardSquare> computerTurn = ComputerTurn.MakeComputerTurn(validMoves, this.m_Board);
-                
-                m_Board.PrintBoard();
-                if (checkSuccess(computerTurn[1], computerTurn[0]))
-                {
-                    Console.WriteLine("Computer's turn");
-                    System.Threading.Thread.Sleep(1500);
-                    i_currentPlayer.AddScore();
-                    playerTurn(i_currentPlayer);
-                }
-                else
-                {
-                    Console.WriteLine("Computer's turn");
-                    noMatch(computerTurn[1], computerTurn[0], validMoves);
-                }
-            }
-
-            // human turn
-            else if (!isGameOver) 
-            {
-                currentMove = InputManager.GetPlayerTurn(m_Board, i_currentPlayer);
-                ComputerTurn.UpdateMemory(currentMove);
-                previousMove = swapMoves(currentMove, validMoves);
-                currentMove = InputManager.GetPlayerTurn(m_Board, i_currentPlayer);
-                ComputerTurn.UpdateMemory(currentMove);
-                m_Board.BoardAsMatrix[currentMove.RowIndex, currentMove.ColumnIndex].FlipSquare();
-                validMoves.Remove(currentMove);
-                
-                m_Board.PrintBoard();
-                if (checkSuccess(currentMove, previousMove))
-                {
-                    i_currentPlayer.AddScore();
-                    playerTurn(i_currentPlayer);
-                }
-                else
-                {
-                    noMatch(currentMove, previousMove, validMoves);
-                }
-            }
-
-            return isGameOver;
-        }
 
         private BoardSquare swapMoves(BoardSquare i_CurrentMove, List<BoardSquare> io_ValidMoves)
         {
@@ -168,9 +93,9 @@ namespace B20_Ex02
             return previousMove;
         }
 
-        private void noMatch(BoardSquare i_CurrentMove, BoardSquare i_PreviousMove, List<BoardSquare> i_ValidMoves)
+        public void NoMatch(BoardSquare i_CurrentMove, BoardSquare i_PreviousMove, List<BoardSquare> i_ValidMoves)
         {
-            System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep();
             m_Board.BoardAsMatrix[i_CurrentMove.RowIndex, i_CurrentMove.ColumnIndex].HideSquare();
             m_Board.BoardAsMatrix[i_PreviousMove.RowIndex, i_PreviousMove.ColumnIndex].HideSquare();
             i_ValidMoves.Add(i_CurrentMove);
@@ -179,9 +104,140 @@ namespace B20_Ex02
             m_Board.PrintBoard();
         }
 
-        private bool checkSuccess(BoardSquare i_Curr, BoardSquare i_Prev)
+        public bool CheckSuccess(BoardSquare i_Curr, BoardSquare i_Prev)
         {
-            return i_Curr.letter.Equals(i_Prev.letter);
+            return i_Curr.letter.Equals(i_Prev.letter) && !i_Curr.Equals(i_Prev);
+        }
+
+        public bool PlayComputerTurn(BoardSquare i_ComputerFirstMove, BoardSquare i_ComputerSecondMove)
+        {
+            bool isSuccess = false;
+            if (m_ValidMoves.Count == 0)
+            {
+                m_IsGameOver = true;
+            }
+
+            if (!m_IsGameOver)
+            {
+                m_Board.PrintBoard();
+                if (CheckSuccess(i_ComputerFirstMove, i_ComputerSecondMove))
+                {
+                    m_PlayerTwo.AddScore();
+                    isSuccess = true;
+                }
+                else
+                {
+                    NoMatch(i_ComputerFirstMove, i_ComputerSecondMove, m_ValidMoves);
+                    m_CurrentPlayer = m_PlayerOne;
+                    isSuccess = false;
+                }
+            }
+            return isSuccess;
+        }
+
+        public bool PlayHumanTurn(Player i_CurrentPlayer, BoardSquare i_CurrentMove, BoardSquare i_PreviousMove)
+        {
+            bool isSuccess = false;
+            if (m_ValidMoves.Count == 0)
+            {
+                m_IsGameOver = true;
+            }
+
+            if (!m_IsGameOver)
+            {
+                ComputerTurn.UpdateMemory(i_CurrentMove);
+                ComputerTurn.UpdateMemory(i_PreviousMove);
+                m_ValidMoves.Remove(i_CurrentMove);
+                m_ValidMoves.Remove(i_PreviousMove);
+                if (CheckSuccess(i_CurrentMove, i_PreviousMove))
+                {
+                    i_CurrentPlayer.AddScore();
+                    isSuccess = true;
+                    m_CurrentPlayer = i_CurrentPlayer;
+                }
+                else
+                {
+                    NoMatch(i_CurrentMove, i_PreviousMove, m_ValidMoves);
+                    isSuccess = false;
+                    m_CurrentPlayer = i_CurrentPlayer == m_PlayerOne ? m_PlayerTwo : m_PlayerOne;
+                }
+            }
+
+            return isSuccess;
+        }
+
+        public Player FirstPlayer
+        {
+            get
+            {
+                return m_PlayerOne;
+            }
+        }
+
+        public Player SecondPlayer
+        {
+            get
+            {
+                return m_PlayerTwo;
+            }
+        }
+
+        public Player CurrentPlayer
+        {
+           get
+            {
+                return m_CurrentPlayer;
+            }
+        }
+
+        public Board GameBoard
+        {
+            get
+            {
+                return m_Board;
+            }
+        }
+
+        public BoardSquare CurrentMove
+        {
+            get
+            {
+                return m_CurrentMove;
+            }
+
+            set
+            {
+                m_CurrentMove = value;
+            }
+        }
+
+        public BoardSquare PreviousMove
+        {
+            get
+            {
+                return m_PreviousMove;
+            }
+
+            set
+            {
+                m_PreviousMove = value;
+            }
+        }
+        
+        public bool IsGameOver
+        {
+            get
+            {
+                return m_IsGameOver;
+            }
+        }
+
+        public List<BoardSquare> ValidMoves
+        {
+            get
+            {
+                return m_ValidMoves;
+            }
         }
     }
 }
