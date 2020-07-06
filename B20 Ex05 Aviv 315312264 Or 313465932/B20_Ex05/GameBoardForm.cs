@@ -102,7 +102,7 @@ namespace B20_Ex05
                     buttonClicked.ShowText();
                     buttonClicked.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
                     buttonClicked.Refresh();
-                    disableEnableControls();
+                    disableControls();
                     makeMove(buttonClicked, m_PreviousButtonClicked);
                 }
             }
@@ -130,14 +130,17 @@ namespace B20_Ex05
                 }
                 else
                 {
+                    enableControls();
                     currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
                     currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
                     hideCards(i_ButtonClicked, i_PreviousButtonClicked);
                     m_PreviousButtonClicked = null;
+                    disableControls();
                 }
 
                 makeComputerMove();
-                disableEnableControls();
+                Application.DoEvents(); // fix button clicking when disabled
+                enableControls();
             }
             else
             {
@@ -147,9 +150,10 @@ namespace B20_Ex05
 
         private void makeComputerMove()
         {
-            disableEnableControls();
+            
             while (r_GameManager.CurrentPlayer.IsComputer && !r_GameManager.IsGameOver)
             {
+                disableControls();
                 System.Threading.Thread.Sleep(1000);
                 currentPlayerLabel.Text = "Current Player: Computer";
                 currentPlayerLabel.BackColor = r_SecondPlayerColor;
@@ -172,7 +176,7 @@ namespace B20_Ex05
             }
 
             Application.DoEvents(); // fix button clicking when disabled
-            disableEnableControls();
+            enableControls();
         }
 
         private void hideCards(GameButton i_firstCard, GameButton i_secondCard)
@@ -222,12 +226,21 @@ namespace B20_Ex05
             MessageBox.Show("Game Over");
         }
 
-        private void disableEnableControls()
+        private void disableControls()
         {
             foreach (Control control in Controls)
             {
                 if (control is GameButton)
-                    control.Enabled = !control.Enabled;
+                    control.Enabled = false;
+            }
+        }
+
+        private void enableControls()
+        {
+            foreach (Control control in Controls)
+            {
+                if (control is GameButton)
+                    control.Enabled = true;
             }
         }
 
