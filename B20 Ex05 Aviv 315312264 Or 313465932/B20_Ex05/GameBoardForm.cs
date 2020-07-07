@@ -51,7 +51,7 @@ namespace B20_Ex05
             this.currentPlayerLabel.Name = "currentPlayerLabel";
             this.currentPlayerLabel.AutoSize = true;
             this.currentPlayerLabel.Top = this.Bottom - 160;
-            this.currentPlayerLabel.Left = this.Left + 12;
+            this.currentPlayerLabel.Left = 12;
             this.currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
             this.currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
 
@@ -60,7 +60,7 @@ namespace B20_Ex05
             this.firstPlayerLabel.BackColor = r_FirstPlayerColor;
             this.firstPlayerLabel.AutoSize = true;
             this.firstPlayerLabel.Top = this.Bottom - 130;
-            this.firstPlayerLabel.Left = this.Left + 12;
+            this.firstPlayerLabel.Left = 12;
             this.firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score + " Pairs";
 
             this.secondPlayerLabel = new Label();
@@ -68,7 +68,7 @@ namespace B20_Ex05
             this.secondPlayerLabel.BackColor = r_SecondPlayerColor;
             this.secondPlayerLabel.AutoSize = true;
             this.secondPlayerLabel.Top = this.Bottom - 100;
-            this.secondPlayerLabel.Left = this.Left + 12;
+            this.secondPlayerLabel.Left = 12;
             this.secondPlayerLabel.Text = r_GameManager.SecondPlayer.Name + ": " + r_GameManager.SecondPlayer.Score + " Pairs";
 
             m_FocusControlButton = new Button();
@@ -78,6 +78,7 @@ namespace B20_Ex05
             Controls.Add(firstPlayerLabel);
             Controls.Add(secondPlayerLabel);
             Controls.Add(m_FocusControlButton);
+
 
             createGameButtons();
         }
