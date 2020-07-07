@@ -112,11 +112,7 @@ namespace B20_Ex02
         public bool PlayComputerTurn(BoardSquare i_ComputerFirstMove, BoardSquare i_ComputerSecondMove)
         {
             bool isSuccess = false;
-            if (m_ValidMoves.Count == 0)
-            {
-                m_IsGameOver = true;
-            }
-
+           
             if (!m_IsGameOver)
             {
                 m_Board.PrintBoard();
@@ -132,16 +128,19 @@ namespace B20_Ex02
                     isSuccess = false;
                 }
             }
+
+            if (m_ValidMoves.Count == 0)
+            {
+                m_IsGameOver = true;
+            }
+
             return isSuccess;
         }
 
         public bool PlayHumanTurn(Player i_CurrentPlayer, BoardSquare i_CurrentMove, BoardSquare i_PreviousMove)
         {
             bool isSuccess = false;
-            if (m_ValidMoves.Count == 0)
-            {
-                m_IsGameOver = true;
-            }
+         
 
             if (!m_IsGameOver)
             {
@@ -161,6 +160,11 @@ namespace B20_Ex02
                     isSuccess = false;
                     m_CurrentPlayer = i_CurrentPlayer == m_PlayerOne ? m_PlayerTwo : m_PlayerOne;
                 }
+            }
+
+            if (m_ValidMoves.Count == 0)
+            {
+                m_IsGameOver = true;
             }
 
             return isSuccess;

@@ -22,6 +22,7 @@ namespace B20_Ex05
         private readonly Color r_FirstPlayerColor = Color.FromArgb(192, 255, 192);
         private readonly Color r_SecondPlayerColor = Color.FromArgb(191, 191, 255);
         private GameButton m_PreviousButtonClicked;
+        private Button m_FocusControlButton;
 
 
 
@@ -65,9 +66,13 @@ namespace B20_Ex05
             this.secondPlayerLabel.Left = 12;
             this.secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score;
 
+           m_FocusControlButton = new Button();
+           m_FocusControlButton.Size = new Size(0, 0);
+
             this.Controls.Add(this.currentPlayerLabel);
             this.Controls.Add(this.firstPlayerLabel);
             this.Controls.Add(this.secondPlayerLabel);
+            this.Controls.Add(m_FocusControlButton);
             GameButton[,] buttonMatrix = new GameButton[r_BoardRows, r_BoardCols];
             for (int i = 0; i < r_BoardRows; i++)
             {
@@ -78,6 +83,7 @@ namespace B20_Ex05
                     buttonMatrix[i, j].Size = new Size(80, 80);
                     buttonMatrix[i, j].Top =(i + 1) * 85;
                     buttonMatrix[i, j].Left = (j + 1) * 85;
+                    buttonMatrix[i, j].TabStop = false;
                     this.Controls.Add(buttonMatrix[i, j]);
                     buttonMatrix[i, j].Click += new EventHandler(gameButtonClick);
                 }
@@ -102,6 +108,7 @@ namespace B20_Ex05
                     buttonClicked.ShowText();
                     buttonClicked.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
                     buttonClicked.Refresh();
+                    m_FocusControlButton.Focus();
                     disableControls();
                     makeMove(buttonClicked, m_PreviousButtonClicked);
                 }
@@ -110,39 +117,38 @@ namespace B20_Ex05
 
         private void makeMove(GameButton i_ButtonClicked, GameButton i_PreviousButtonClicked)
         {
-            if (!r_GameManager.IsGameOver)
+            System.Threading.Thread.Sleep(1000);
+            currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
+            currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
+            if (r_GameManager.PlayHumanTurn(r_GameManager.CurrentPlayer, i_ButtonClicked.BoardSquare, i_PreviousButtonClicked.BoardSquare))
             {
-                System.Threading.Thread.Sleep(1000);
-                currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
-                currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
-                if (r_GameManager.PlayHumanTurn(r_GameManager.CurrentPlayer, i_ButtonClicked.BoardSquare, i_PreviousButtonClicked.BoardSquare))
+                if (r_GameManager.CurrentPlayer.PlayerNum == 1)
                 {
-                    if (r_GameManager.CurrentPlayer.PlayerNum == 1)
-                    {
-                        firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score;
-                    }
-                    else
-                    {
-                        secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score;
-                    }
-
-                    m_PreviousButtonClicked = null;
+                    firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score;
                 }
                 else
                 {
-                    enableControls();
-                    currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
-                    currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
-                    hideCards(i_ButtonClicked, i_PreviousButtonClicked);
-                    m_PreviousButtonClicked = null;
-                    disableControls();
+                    secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score;
                 }
 
-                makeComputerMove();
-                Application.DoEvents(); // fix button clicking when disabled
-                enableControls();
+                m_PreviousButtonClicked = null;
             }
             else
+            {
+                //enableControls();
+                currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
+                currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
+                hideCards(i_ButtonClicked, i_PreviousButtonClicked);
+                m_PreviousButtonClicked = null;
+                //disableControls();
+            }
+
+            makeComputerMove();
+            //    Application.DoEvents(); // fix button clicking when disabled
+            //    enableControls();
+            // }
+            //else
+            if (r_GameManager.IsGameOver)
             {
                 gameOver();
             }
@@ -150,10 +156,10 @@ namespace B20_Ex05
 
         private void makeComputerMove()
         {
-            
+            disableControls();
             while (r_GameManager.CurrentPlayer.IsComputer && !r_GameManager.IsGameOver)
             {
-                disableControls();
+                
                 System.Threading.Thread.Sleep(1000);
                 currentPlayerLabel.Text = "Current Player: Computer";
                 currentPlayerLabel.BackColor = r_SecondPlayerColor;
@@ -185,8 +191,12 @@ namespace B20_Ex05
             i_secondCard.BoardSquare.HideSquare();
             i_firstCard.HideText();
             i_secondCard.HideText();
-            i_firstCard.BackColor = Button.DefaultBackColor;
-            i_secondCard.BackColor = Button.DefaultBackColor;
+            //i_firstCard.BackColor = Button.DefaultBackColor;
+            //i_secondCard.BackColor = Button.DefaultBackColor;
+            i_firstCard.UseVisualStyleBackColor = true;
+            i_secondCard.UseVisualStyleBackColor = true;
+            i_firstCard.Refresh();
+            i_secondCard.Refresh();
         }
 
         private void revealCards(GameButton i_FirstChoice, GameButton i_SecondChoice)
