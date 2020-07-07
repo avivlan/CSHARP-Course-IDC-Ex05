@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.SymbolStore;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
@@ -78,6 +79,11 @@ namespace B20_Ex05
             Controls.Add(secondPlayerLabel);
             Controls.Add(m_FocusControlButton);
 
+            createGameButtons();
+        }
+
+        private void createGameButtons()
+        {
             GameButton[,] buttonMatrix = new GameButton[r_BoardRows, r_BoardCols];
             for (int i = 0; i < r_BoardRows; i++)
             {
