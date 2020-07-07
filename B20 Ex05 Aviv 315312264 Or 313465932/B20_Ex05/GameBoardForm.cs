@@ -47,6 +47,7 @@ namespace B20_Ex05
             this.MaximizeBox = false;
 
             this.currentPlayerLabel = new Label();
+            this.currentPlayerLabel.Name = "currentPlayerLabel";
             this.currentPlayerLabel.AutoSize = true;
             this.currentPlayerLabel.Top = this.Bottom - 160;
             this.currentPlayerLabel.Left = this.Left + 12;
@@ -54,6 +55,7 @@ namespace B20_Ex05
             this.currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
 
             this.firstPlayerLabel = new Label();
+            this.firstPlayerLabel.Name = "firstPlayerLabel";
             this.firstPlayerLabel.BackColor = r_FirstPlayerColor;
             this.firstPlayerLabel.AutoSize = true;
             this.firstPlayerLabel.Top = this.Bottom - 130;
@@ -61,6 +63,7 @@ namespace B20_Ex05
             this.firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score + " Pairs";
 
             this.secondPlayerLabel = new Label();
+            this.secondPlayerLabel.Name = "secondPlayerLabel";
             this.secondPlayerLabel.BackColor = r_SecondPlayerColor;
             this.secondPlayerLabel.AutoSize = true;
             this.secondPlayerLabel.Top = this.Bottom - 100;
