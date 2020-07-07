@@ -39,6 +39,7 @@ namespace B20_Ex05
 
         private void initComponent()
         {
+            Controls.Clear();
             this.Text = "Memory Game";
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Size = new Size(((r_BoardRows + 2) * 100) + 15, (r_BoardCols + 2) * 100);
@@ -47,32 +48,33 @@ namespace B20_Ex05
 
             this.currentPlayerLabel = new Label();
             this.currentPlayerLabel.AutoSize = true;
-            this.currentPlayerLabel.Top = this.Bottom - 180;
-            this.currentPlayerLabel.Left = 12;
+            this.currentPlayerLabel.Top = this.Bottom - 160;
+            this.currentPlayerLabel.Left = this.Left + 12;
             this.currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
             this.currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
 
             this.firstPlayerLabel = new Label();
             this.firstPlayerLabel.BackColor = r_FirstPlayerColor;
             this.firstPlayerLabel.AutoSize = true;
-            this.firstPlayerLabel.Top = this.Bottom - 150;
-            this.firstPlayerLabel.Left = 12;
-            this.firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score;
-        
+            this.firstPlayerLabel.Top = this.Bottom - 130;
+            this.firstPlayerLabel.Left = this.Left + 12;
+            this.firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score + " Pairs";
+
             this.secondPlayerLabel = new Label();
             this.secondPlayerLabel.BackColor = r_SecondPlayerColor;
             this.secondPlayerLabel.AutoSize = true;
-            this.secondPlayerLabel.Top =this.Bottom - 120;
-            this.secondPlayerLabel.Left = 12;
-            this.secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score;
+            this.secondPlayerLabel.Top = this.Bottom - 100;
+            this.secondPlayerLabel.Left = this.Left + 12;
+            this.secondPlayerLabel.Text = r_GameManager.SecondPlayer.Name + ": " + r_GameManager.SecondPlayer.Score + " Pairs";
 
-           m_FocusControlButton = new Button();
-           m_FocusControlButton.Size = new Size(0, 0);
+            m_FocusControlButton = new Button();
+            m_FocusControlButton.Size = new Size(0, 0);
 
-            this.Controls.Add(this.currentPlayerLabel);
-            this.Controls.Add(this.firstPlayerLabel);
-            this.Controls.Add(this.secondPlayerLabel);
-            this.Controls.Add(m_FocusControlButton);
+            Controls.Add(currentPlayerLabel);
+            Controls.Add(firstPlayerLabel);
+            Controls.Add(secondPlayerLabel);
+            Controls.Add(m_FocusControlButton);
+
             GameButton[,] buttonMatrix = new GameButton[r_BoardRows, r_BoardCols];
             for (int i = 0; i < r_BoardRows; i++)
             {
@@ -81,10 +83,10 @@ namespace B20_Ex05
                     buttonMatrix[i, j] = new GameButton(r_GameManager.GameBoard.BoardAsMatrix[i, j]);
                     buttonMatrix[i, j].Name = r_GameManager.GameBoard.BoardAsMatrix[i, j].GetSquareID();
                     buttonMatrix[i, j].Size = new Size(80, 80);
-                    buttonMatrix[i, j].Top =(i + 1) * 85;
+                    buttonMatrix[i, j].Top = (i + 1) * 85;
                     buttonMatrix[i, j].Left = (j + 1) * 85;
                     buttonMatrix[i, j].TabStop = false;
-                    this.Controls.Add(buttonMatrix[i, j]);
+                    Controls.Add(buttonMatrix[i, j]);
                     buttonMatrix[i, j].Click += new EventHandler(gameButtonClick);
                 }
             }
@@ -124,11 +126,11 @@ namespace B20_Ex05
             {
                 if (r_GameManager.CurrentPlayer.PlayerNum == 1)
                 {
-                    firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score;
+                    firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score + " Pairs";
                 }
                 else
                 {
-                    secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score;
+                    secondPlayerLabel.Text = r_SecondPlayerName + ": " + r_GameManager.SecondPlayer.Score + " Pairs";
                 }
 
                 m_PreviousButtonClicked = null;
@@ -170,7 +172,7 @@ namespace B20_Ex05
                 revealCards(firstChoice, secondChoice);
                 if (r_GameManager.PlayComputerTurn(firstChoice.BoardSquare, secondChoice.BoardSquare))
                 {
-                    secondPlayerLabel.Text = "Computer: " + r_GameManager.SecondPlayer.Score;
+                    secondPlayerLabel.Text = "Computer: " + r_GameManager.SecondPlayer.Score + " Pairs";
                     secondPlayerLabel.Refresh();
                 }
                 else
@@ -233,7 +235,31 @@ namespace B20_Ex05
 
         private void gameOver()
         {
-            MessageBox.Show("Game Over");
+            int winnerNum = r_GameManager.ScoreScreen();
+            string winner = string.Empty;
+            switch (winnerNum)
+            {
+                case 0:
+                    winner = "It's a tie!";
+                    break;
+                case 1:
+                    winner = r_FirstPlayerName + " Won!";
+                    break;
+                case 2:
+                    winner = r_GameManager.SecondPlayer.Name + " Won!";
+                    break;
+            }
+            DialogResult isAnotherRound = MessageBox.Show(winner + Environment.NewLine + "Start another round?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (isAnotherRound == DialogResult.Yes)
+            {
+                r_GameManager.RestartGame();
+                initComponent();
+                Show();
+            }
+            else if (isAnotherRound == DialogResult.No)
+            {
+                closeGame();
+            }
         }
 
         private void disableControls()
@@ -241,7 +267,9 @@ namespace B20_Ex05
             foreach (Control control in Controls)
             {
                 if (control is GameButton)
+                {
                     control.Enabled = false;
+                }
             }
         }
 
@@ -250,11 +278,18 @@ namespace B20_Ex05
             foreach (Control control in Controls)
             {
                 if (control is GameButton)
+                {
                     control.Enabled = true;
+                }
             }
         }
 
         private void GameBoardForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            closeGame();
+        }
+
+        private void closeGame()
         {
             this.Close();
             Application.Exit();

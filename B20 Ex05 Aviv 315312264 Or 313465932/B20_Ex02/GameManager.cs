@@ -24,19 +24,20 @@ namespace B20_Ex02
         public GameManager(string i_FirstPlayerName, string i_SecondPlayerName, int o_Rows, int o_Cols, bool isComputer)
         {
             m_PlayerNum = 1;
-            this.m_PlayerOne = new Player(i_FirstPlayerName, false, 1);
+            this.m_PlayerOne = new Player(i_FirstPlayerName, false, m_PlayerNum);
+            m_PlayerNum = 2;
             switch (isComputer)
             {
                 case true:
                     {
-                        m_PlayerTwo = new Player("Computer", isComputer, 2);
+                        m_PlayerTwo = new Player("Computer", isComputer, m_PlayerNum);
                         break;
                     }
 
                 case false:
                     {
                         m_PlayerNum = 2;
-                        m_PlayerTwo = new Player(i_SecondPlayerName, isComputer, 2);
+                        m_PlayerTwo = new Player(i_SecondPlayerName, isComputer, m_PlayerNum);
                         break;
                     } 
             }
@@ -53,8 +54,8 @@ namespace B20_Ex02
             ComputerTurn.BuildMemory(m_Board);
             m_CurrentPlayer = m_PlayerOne;
             m_IsGameOver = false;
-            bool isPlayerOneTurn = true;
-            bool isAnotherGame;
+            //bool isPlayerOneTurn = true;
+            //bool isAnotherGame;
         }
 
         public void RestartGame()
@@ -64,22 +65,25 @@ namespace B20_Ex02
             startGame(m_BoardRows, m_BoardCols);
         }
 
-        private void scoreScreen()
+        public int ScoreScreen()
         {
+            int winner = -1;
             Console.WriteLine(m_PlayerOne.Name + "'s score is: " + m_PlayerOne.Score);
             Console.WriteLine(m_PlayerTwo.Name + "'s score is: " + m_PlayerTwo.Score);
             if (m_PlayerOne.Score == m_PlayerTwo.Score)
             {
-                Console.WriteLine("It's a tie!");
+               winner = 0;
             }
             else if (m_PlayerOne.Score > m_PlayerTwo.Score)
             {
-                Console.WriteLine(m_PlayerOne.Name + " Wins!");
+                winner =  1;
             }
             else if (m_PlayerTwo.Score > m_PlayerOne.Score)
             {
-                Console.WriteLine(m_PlayerTwo.Name + " Wins!");
+                winner =  2;
             }
+
+            return winner;
         }
 
         private BoardSquare swapMoves(BoardSquare i_CurrentMove, List<BoardSquare> io_ValidMoves)
