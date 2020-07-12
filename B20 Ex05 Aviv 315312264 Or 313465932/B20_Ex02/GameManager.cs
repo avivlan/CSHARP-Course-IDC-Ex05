@@ -54,8 +54,6 @@ namespace B20_Ex02
             ComputerTurn.BuildMemory(m_Board);
             m_CurrentPlayer = m_PlayerOne;
             m_IsGameOver = false;
-            //bool isPlayerOneTurn = true;
-            //bool isAnotherGame;
         }
 
         public void RestartGame()
@@ -86,12 +84,11 @@ namespace B20_Ex02
             return winner;
         }
 
-        private BoardSquare swapMoves(BoardSquare i_CurrentMove, List<BoardSquare> io_ValidMoves)
+        private BoardSquare swapMoves(BoardSquare i_CurrentMove, List<BoardSquare> i_ValidMoves)
         {
             BoardSquare previousMove;
             m_Board.BoardAsMatrix[i_CurrentMove.RowIndex, i_CurrentMove.ColumnIndex].FlipSquare();
-            io_ValidMoves.Remove(i_CurrentMove);
-            
+            i_ValidMoves.Remove(i_CurrentMove);
             m_Board.PrintBoard();
             previousMove = i_CurrentMove;
             return previousMove;
@@ -99,13 +96,10 @@ namespace B20_Ex02
 
         public void NoMatch(BoardSquare i_CurrentMove, BoardSquare i_PreviousMove, List<BoardSquare> i_ValidMoves)
         {
-            //System.Threading.Thread.Sleep();
             m_Board.BoardAsMatrix[i_CurrentMove.RowIndex, i_CurrentMove.ColumnIndex].HideSquare();
             m_Board.BoardAsMatrix[i_PreviousMove.RowIndex, i_PreviousMove.ColumnIndex].HideSquare();
             i_ValidMoves.Add(i_CurrentMove);
             i_ValidMoves.Add(i_PreviousMove);
-          
-            m_Board.PrintBoard();
         }
 
         public bool CheckSuccess(BoardSquare i_Curr, BoardSquare i_Prev)
@@ -145,7 +139,6 @@ namespace B20_Ex02
         {
             bool isSuccess = false;
          
-
             if (!m_IsGameOver)
             {
                 ComputerTurn.UpdateMemory(i_CurrentMove);

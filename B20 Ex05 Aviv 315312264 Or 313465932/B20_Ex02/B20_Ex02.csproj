@@ -43,7 +43,6 @@
     <Compile Include="BoardSquare.cs" />
     <Compile Include="ComputerTurn.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="InputManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ValidMovesGenerator.cs" />

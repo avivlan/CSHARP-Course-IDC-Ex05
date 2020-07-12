@@ -25,8 +25,6 @@ namespace B20_Ex05
         private GameButton m_PreviousButtonClicked;
         private Button m_FocusControlButton;
 
-
-
         public GameBoardForm(string i_FirstPlayerName, string i_SecondPlayerName, int i_Rows, int i_Cols, bool i_IsComputer)
         {
             r_FirstPlayerName = i_FirstPlayerName;
@@ -34,7 +32,6 @@ namespace B20_Ex05
             r_BoardRows = i_Rows;
             r_BoardCols = i_Cols;
             r_GameManager = new GameManager(i_FirstPlayerName, i_SecondPlayerName, i_Rows, i_Cols, i_IsComputer);
-            
             initComponent();
         }
 
@@ -43,7 +40,7 @@ namespace B20_Ex05
             Controls.Clear();
             this.Text = "Memory Game";
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new Size(((r_BoardCols + 2) * 100) + 15, ((r_BoardRows + 2) * 100));
+            this.Size = new Size(((r_BoardCols + 2) * 90), ((r_BoardRows + 2) * 100));
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
 
@@ -78,7 +75,6 @@ namespace B20_Ex05
             Controls.Add(firstPlayerLabel);
             Controls.Add(secondPlayerLabel);
             Controls.Add(m_FocusControlButton);
-
 
             createGameButtons();
         }
@@ -147,19 +143,13 @@ namespace B20_Ex05
             }
             else
             {
-                //enableControls();
                 currentPlayerLabel.Text = "Current Player: " + r_GameManager.CurrentPlayer.Name;
                 currentPlayerLabel.BackColor = r_GameManager.CurrentPlayer.PlayerNum == 1 ? r_FirstPlayerColor : r_SecondPlayerColor;
                 hideCards(i_ButtonClicked, i_PreviousButtonClicked);
                 m_PreviousButtonClicked = null;
-                //disableControls();
             }
 
             makeComputerMove();
-            //    Application.DoEvents(); // fix button clicking when disabled
-            //    enableControls();
-            // }
-            //else
             if (r_GameManager.IsGameOver)
             {
                 gameOver();
@@ -203,8 +193,6 @@ namespace B20_Ex05
             i_secondCard.BoardSquare.HideSquare();
             i_firstCard.HideText();
             i_secondCard.HideText();
-            //i_firstCard.BackColor = Button.DefaultBackColor;
-            //i_secondCard.BackColor = Button.DefaultBackColor;
             i_firstCard.UseVisualStyleBackColor = true;
             i_secondCard.UseVisualStyleBackColor = true;
             i_firstCard.Refresh();
@@ -259,6 +247,7 @@ namespace B20_Ex05
                     winner = r_GameManager.SecondPlayer.Name + " Won!";
                     break;
             }
+
             DialogResult isAnotherRound = MessageBox.Show(winner + Environment.NewLine + "Start another round?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (isAnotherRound == DialogResult.Yes)
             {
