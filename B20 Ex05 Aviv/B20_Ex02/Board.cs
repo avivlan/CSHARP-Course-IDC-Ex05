@@ -63,7 +63,7 @@ namespace B20_Ex02
             return randomLetters;
         }
 
-        public void PrintBoard()
+        public string PrintBoard()
         {
             StringBuilder boardString = new StringBuilder();
             string newLine = Environment.NewLine;
@@ -101,7 +101,7 @@ namespace B20_Ex02
                 boardString.Append(newLine);
             }
 
-            Console.WriteLine(boardString.ToString());
+            return boardString.ToString();
         }
 
         private string lineBorder(int length)

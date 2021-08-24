@@ -62,7 +62,6 @@
             this.firstPlayerText.Name = "firstPlayerText";
             this.firstPlayerText.Size = new System.Drawing.Size(142, 22);
             this.firstPlayerText.TabIndex = 2;
-            this.firstPlayerText.TextChanged += new System.EventHandler(this.firstPlayerText_TextChanged);
             // 
             // secondPlayerText
             // 

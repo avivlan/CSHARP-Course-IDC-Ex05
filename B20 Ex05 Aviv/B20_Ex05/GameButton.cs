@@ -35,6 +35,5 @@ namespace B20_Ex05
         {
             this.Text = m_BoardSquare.letter.ToString();
         }
-
     }
 }

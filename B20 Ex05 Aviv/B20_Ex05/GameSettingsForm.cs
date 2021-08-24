@@ -15,6 +15,7 @@ namespace B20_Ex05
     {
         private static readonly string[] sr_BoardSizes = {"4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4",
                                                           "6 x 5", "6 x 6"};
+        
         private static int s_SizeIndex = 0;
 
         public GameSettingsForm()
@@ -22,14 +23,8 @@ namespace B20_Ex05
             InitializeComponent();
         }
 
-        private void firstPlayerText_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void isComputerButton_Click(object sender, EventArgs e)
         {
-
             secondPlayerText.Enabled = !secondPlayerText.Enabled;
             if (secondPlayerText.Enabled)
             {
@@ -50,6 +45,7 @@ namespace B20_Ex05
             {
                 s_SizeIndex = 0;
             }
+
             boardSizeButton.Text = sr_BoardSizes[s_SizeIndex];
         }
 
@@ -98,6 +94,5 @@ namespace B20_Ex05
                 return sr_BoardSizes[s_SizeIndex][4] - '0';
             }
         }
-
     }
 }

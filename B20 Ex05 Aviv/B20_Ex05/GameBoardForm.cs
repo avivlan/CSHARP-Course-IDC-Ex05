@@ -57,7 +57,7 @@ namespace B20_Ex05
             this.firstPlayerLabel.BackColor = r_FirstPlayerColor;
             this.firstPlayerLabel.AutoSize = true;
             this.firstPlayerLabel.Top = this.ClientSize.Height - 110;
-            this.firstPlayerLabel.Left = 12; ;
+            this.firstPlayerLabel.Left = 12;
             this.firstPlayerLabel.Text = r_FirstPlayerName + ": " + r_GameManager.FirstPlayer.Score + " Pairs";
 
             this.secondPlayerLabel = new Label();
@@ -65,7 +65,7 @@ namespace B20_Ex05
             this.secondPlayerLabel.BackColor = r_SecondPlayerColor;
             this.secondPlayerLabel.AutoSize = true;
             this.secondPlayerLabel.Top = this.ClientSize.Height - 80;
-            this.secondPlayerLabel.Left = 12; ;
+            this.secondPlayerLabel.Left = 12;
             this.secondPlayerLabel.Text = r_GameManager.SecondPlayer.Name + ": " + r_GameManager.SecondPlayer.Score + " Pairs";
 
             m_FocusControlButton = new Button();
@@ -158,10 +158,10 @@ namespace B20_Ex05
 
         private void makeComputerMove()
         {
+            SuspendLayout();
             disableControls();
             while (r_GameManager.CurrentPlayer.IsComputer && !r_GameManager.IsGameOver)
             {
-                
                 System.Threading.Thread.Sleep(1000);
                 currentPlayerLabel.Text = "Current Player: Computer";
                 currentPlayerLabel.BackColor = r_SecondPlayerColor;
@@ -184,6 +184,7 @@ namespace B20_Ex05
             }
 
             Application.DoEvents(); // fix button clicking when disabled
+            ResumeLayout();
             enableControls();
         }
 

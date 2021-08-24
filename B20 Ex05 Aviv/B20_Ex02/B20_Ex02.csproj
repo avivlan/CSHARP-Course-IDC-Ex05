@@ -44,7 +44,6 @@
     <Compile Include="ComputerTurn.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="ValidMovesGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

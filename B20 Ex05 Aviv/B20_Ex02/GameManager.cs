@@ -16,8 +16,8 @@ namespace B20_Ex02
         private int m_BoardCols;
         private int m_PlayerNum;
         private Player m_CurrentPlayer;
-        BoardSquare m_CurrentMove;
-        BoardSquare m_PreviousMove;
+        private BoardSquare m_CurrentMove;
+        private BoardSquare m_PreviousMove;
         private List<BoardSquare> m_ValidMoves;
         private bool m_IsGameOver;
 
@@ -66,19 +66,17 @@ namespace B20_Ex02
         public int ScoreScreen()
         {
             int winner = -1;
-            Console.WriteLine(m_PlayerOne.Name + "'s score is: " + m_PlayerOne.Score);
-            Console.WriteLine(m_PlayerTwo.Name + "'s score is: " + m_PlayerTwo.Score);
             if (m_PlayerOne.Score == m_PlayerTwo.Score)
             {
                winner = 0;
             }
             else if (m_PlayerOne.Score > m_PlayerTwo.Score)
             {
-                winner =  1;
+                winner = 1;
             }
             else if (m_PlayerTwo.Score > m_PlayerOne.Score)
             {
-                winner =  2;
+                winner = 2;
             }
 
             return winner;
@@ -89,7 +87,6 @@ namespace B20_Ex02
             BoardSquare previousMove;
             m_Board.BoardAsMatrix[i_CurrentMove.RowIndex, i_CurrentMove.ColumnIndex].FlipSquare();
             i_ValidMoves.Remove(i_CurrentMove);
-            m_Board.PrintBoard();
             previousMove = i_CurrentMove;
             return previousMove;
         }
@@ -113,7 +110,6 @@ namespace B20_Ex02
            
             if (!m_IsGameOver)
             {
-                m_Board.PrintBoard();
                 if (CheckSuccess(i_ComputerFirstMove, i_ComputerSecondMove))
                 {
                     m_PlayerTwo.AddScore();
